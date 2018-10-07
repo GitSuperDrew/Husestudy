@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping>
+	<class name="cn.husestudy.sendmsg.vo.Contact_Info" table="contact_info">
+		<id name="infoId">
+			<generator class="native"/>
+		</id>
+		<property name="addr"/>
+		<property name="address"/>
+		<property name="school"/>
+		<property name="email"/>
+		<property name="emailwebsite"/>
+		<property name="phone"/>
+		<property name="whour"/>
+		<property name="weekend"/>		
+		
+	</class>
+</hibernate-mapping>

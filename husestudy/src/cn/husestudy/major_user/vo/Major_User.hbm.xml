@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping>
+	<class name="cn.husestudy.major_user.vo.Major_User" table="major_user">
+		<id name="muid">
+			<generator class="native"/>
+		</id>
+		
+		<!-- 与（用户表）的关系 -->
+		<many-to-one name="user" lazy="false"  class="cn.husestudy.user.vo.User" column="uid"/>
+		
+		
+		<!-- 与（专业）的关系 -->
+		<many-to-one name="major" lazy="false"  class="cn.husestudy.major.vo.Major" column="mid"/>
+		
+		
+	</class>
+</hibernate-mapping>

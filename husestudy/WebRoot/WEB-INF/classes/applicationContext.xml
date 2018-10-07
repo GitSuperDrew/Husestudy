@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<!-- 配置连接池: -->
+	<!-- 引入外部属性文件 -->
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+	<!-- 配置C3P0连接池: -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driver}"/>
+		<property name="jdbcUrl" value="${jdbc.url}"/>
+		<property name="user" value="${jdbc.user}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+	
+	<!-- Hibernate的相关信息 -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<!-- 注入连接池 -->
+		<property name="dataSource" ref="dataSource"/>
+		<!-- 配置Hibernate的其他的属性 -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.connection.autocommit">false</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<!-- 以此，避免INFO JdbcSupportLoader:108 - Disabling contextual LOB creation as createClob() method threw error -->
+				<prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
+			</props>
+		</property>
+		<!-- 配置Hibernate的映射文件 -->
+		<property name="mappingResources">
+			<list>
+				<value>cn/husestudy/admin/vo/Admin.hbm.xml</value>
+				<value>cn/husestudy/college/vo/College.hbm.xml</value>
+				<value>cn/husestudy/major/vo/Major.hbm.xml</value>
+				<value>cn/husestudy/major_user/vo/Major_User.hbm.xml</value>
+				<value>cn/husestudy/user/vo/User.hbm.xml</value>
+				<value>cn/husestudy/works/vo/Works.hbm.xml</value>
+				<value>cn/husestudy/husefile/vo/Husefile.hbm.xml</value>
+				<value>cn/husestudy/git/vo/Git.hbm.xml</value>
+				<value>cn/husestudy/discuss/vo/Discuss.hbm.xml</value>
+				<value>cn/husestudy/reply/vo/Reply.hbm.xml</value>
+				<value>cn/husestudy/sendmsg/vo/SendMsg.hbm.xml</value>
+				<value>cn/husestudy/sendmsg/vo/Contact_Info.hbm.xml</value>
+				<value>cn/husestudy/motto/vo/Motto.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 事务管理: -->
+	<!-- 事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 开启注解事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	
+	<!-- Action的配置 ==============================================================-->
+	<!--  ======================================================================= -->	
+	
+	<!-- 首页访问的Action -->
+	<bean id="indexAction" class="cn.husestudy.index.action.IndexAction" scope="prototype">
+		<property name="collegeService" ref="collegeService"/>
+		<property name="majorService" ref="majorService"/> 
+		<property name="worksService" ref="worksService"/> 
+		<property name="sendMsgService" ref="sendMsgService"/>
+		<property name="mottoService" ref="mottoService"/>
+		<property name="discussService" ref="discussService"/>
+	</bean>
+	
+	<!-- Single学院首页访问的Action -->
+	<bean id="collegeAction" class="cn.husestudy.college.action.CollegeAction" scope="prototype">
+		<property name="collegeService" ref="collegeService"/>
+		<property name="majorService" ref="majorService"/> 
+		<property name="major_UserService" ref="major_UserService"/>
+		<property name="userService" ref="userService"/>
+		<property name="sendMsgService" ref="sendMsgService"/>
+		<property name="worksService" ref="worksService"/>
+		<property name="discussService" ref="discussService"/>
+	</bean>
+	
+	<!-- 配置验证码Action -->
+	<bean id="checkImgAction" class="cn.husestudy.user.action.CheckImgAction" scope="prototype"></bean>
+	
+	<!-- 配置（用户）模块的Action -->
+	<bean id="userAction" class="cn.husestudy.user.action.UserAction" scope="prototype">
+		<!-- 注入Service -->
+		<property name="userService" ref="userService"/>
+		<property name="worksService" ref="worksService"/>
+		
+	</bean>
+	
+	<!-- 配置（作品展示）模块的Action -->
+	<bean id="worksAction" class="cn.husestudy.works.action.WorksAction" scope="prototype">
+		<property name="collegeService" ref="collegeService"/>
+		<property name="worksService" ref="worksService"/>
+		<property name="userService" ref="userService"/>
+		<property name="discussService" ref="discussService"/>
+		<property name="sendMsgService" ref="sendMsgService"/>
+	</bean>
+	
+	<!-- 配置（文件）模块的action -->
+	<bean id="husefileAction" class="cn.husestudy.husefile.action.HusefileAction" scope="prototype">
+		<property name="husefileService" ref="husefileService"/>
+		<property name="worksService" ref="worksService"/>
+		<property name="discussService" ref="discussService"/>
+		<property name="sendMsgService" ref="sendMsgService"/>
+	</bean>
+	
+	<!-- 配置前台（用户反馈信息）管理的Action -->
+	<bean id="sendMsgAction" class="cn.husestudy.sendmsg.action.SendMsgAction" scope="prototype">
+		<property name="sendMsgService" ref="sendMsgService"/>
+	</bean>	
+	
+	<!-- 配置前台（网站服务信息）展示的Action -->
+	<bean id="contact_InfoAction" class="cn.husestudy.sendmsg.action.Contact_InfoAction" scope="prototype">
+		<property name="sendMsgService" ref="sendMsgService"/>
+	</bean>
+	
+	<!-- 配置前台（登入用户可以评论作品）模块的Action -->
+	<bean id="discussAction" class="cn.husestudy.discuss.action.DiscussAction" scope="prototype">
+		<property name="worksService" ref="worksService"/>
+		<property name="userService" ref="userService"/>
+		<property name="discussService" ref="discussService"/>
+		<property name="sendMsgService" ref="sendMsgService"/>
+	</bean>
+	
+	<!-- 配置前台（登入用户可以【回复评论】作品）模块的Action -->
+	<bean id="replyAction" class="cn.husestudy.reply.action.ReplyAction" scope="prototype">
+		<property name="replyService" ref="replyService"/>
+		<property name="worksService" ref="worksService"/>
+		<property name="userService" ref="userService"/>
+		<property name="discussService" ref="discussService"/>
+	</bean>
+	
+	<!-- 配置前台（登录用户可以自己编辑收藏）模板的Action -->
+	<bean id="gitAction" class="cn.husestudy.git.action.GitAction" scope="prototype">
+		<property name="worksService" ref="worksService"/>
+		<property name="userService" ref="userService"/>
+		<property name="gitService" ref="gitService"/>
+		<property name="discussService" ref="discussService"/>
+		<property name="sendMsgService" ref="sendMsgService"/>
+	</bean>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 配置后台用户（作品）管理的Action -->
+	<bean id="adminWorksAction" class="cn.husestudy.works.adminaction.AdminWorksAction" scope="prototype">
+		<property name="worksService" ref="worksService"/>
+	</bean>	
+	
+	<!-- 配置后台（管理员）登录的Action -->
+	<bean id="adminAction" class="cn.husestudy.admin.action.AdminAction" scope="prototype">
+		<property name="adminService" ref="adminService"/>
+	</bean>
+	<bean id="adminPlusAction" class="cn.husestudy.admin.action.AdminPlusAction" scope="prototype">
+		<property name="adminService" ref="adminService"/>
+	</bean>	
+	
+	<!-- 配置后台（学院）一级管理的Action -->
+	<bean id="adminCollegeAction" class="cn.husestudy.college.adminaction.AdminCollegeAction" scope="prototype">
+		<property name="collegeService" ref="collegeService"/>
+	</bean>	
+	<bean id="adminCollegePlusAction" class="cn.husestudy.college.adminaction.AdminCollegePlusAction" scope="prototype">
+		<property name="collegeService" ref="collegeService"/>
+	</bean>	
+	
+	<!-- 配置后台(专业)二级分类管理的Action -->
+	<bean id="adminMajorAction" class="cn.husestudy.major.adminaction.AdminMajorAction" scope="prototype">
+		<property name="majorService" ref="majorService"/>
+		<property name="collegeService" ref="collegeService"/>
+	</bean>	
+	
+	<!-- 配置后台(多项专业)管理的Action -->
+	<bean id="major_UserAdminAction" class="cn.husestudy.major_user.adminaction.Major_UserAdminAction" scope="prototype">
+		<property name="major_UserService" ref="major_UserService"/>
+	</bean>
+	
+	<!-- 配置后台用户（学生/老师）管理的Action -->
+	<bean id="userAdminAction" class="cn.husestudy.user.adminaction.UserAdminAction" scope="prototype">
+		<property name="userService" ref="userService"/>
+		<property name="major_UserService" ref="major_UserService"/>
+		<property name="majorService" ref="majorService"/>
+	</bean>
+	<bean id="userAdminPlusAction" class="cn.husestudy.user.adminaction.UserAdminPlusAction" scope="prototype">
+		<property name="userService" ref="userService"/>
+		<property name="major_UserService" ref="major_UserService"/>
+		<property name="majorService" ref="majorService"/>
+	</bean>
+	
+	
+	<!-- 配置后台用户（收藏）管理的Action -->
+	<bean id="adminGitAction" class="cn.husestudy.git.adminaction.AdminGitAction" scope="prototype">
+		<property name="gitService" ref="gitService"/>
+	</bean>	
+	
+	<!-- 配置后台用户（评论）管理的Action -->
+	<bean id="discussAdminAction" class="cn.husestudy.discuss.adminaction.DiscussAdminAction" scope="prototype">
+		<property name="discussService" ref="discussService"/>
+	</bean>	
+	
+	<!-- 配置后台用户（反馈信息）管理的Action -->
+	<bean id="sendMsgAdminAction" class="cn.husestudy.sendmsg.adminaction.SendMsgAdminAction" scope="prototype">
+		<property name="sendMsgService" ref="sendMsgService"/>
+	</bean>	
+	
+	<!-- 配置后台（网站信息服务）管理的Action -->
+	<bean id="contact_InfoAdminAction" class="cn.husestudy.sendmsg.adminaction.Contact_InfoAdminAction" scope="prototype">
+		<property name="sendMsgService" ref="sendMsgService"/>
+	</bean>	
+	
+	<!-- 配置后台（格言）管理的Action -->
+	<bean id="mottoAdminAction" class="cn.husestudy.motto.adminaction.MottoAdminAction" scope="prototype">
+		<property name="mottoService" ref="mottoService"/>
+	</bean>	
+	
+	
+	<!-- Service的配置  ============================================================-->
+	<!--  ======================================================================= -->	
+	
+	<bean id="collegeService" class="cn.husestudy.college.service.CollegeService">
+		<property name="collegeDao" ref="collegeDao"/>
+	</bean>
+	
+	<bean id="majorService" class="cn.husestudy.major.service.MajorService">
+		<property name="majorDao" ref="majorDao"/>
+	</bean>	
+	
+	<bean id="major_UserService" class="cn.husestudy.major_user.service.Major_UserService">
+		<property name="major_UserDao" ref="major_UserDao"/>
+	</bean>	
+	
+	<bean id="userService" class="cn.husestudy.user.service.UserService">
+		<property name="userDao" ref="userDao"/>
+	</bean>
+	
+	<bean id="adminService" class="cn.husestudy.admin.service.AdminService">
+		<property name="adminDao" ref="adminDao"/>
+	</bean>
+	
+	<bean id="worksService" class="cn.husestudy.works.service.WorksService">
+		<property name="worksDao" ref="worksDao"/>
+	</bean>
+	
+	<bean id="husefileService" class="cn.husestudy.husefile.service.HusefileService">
+		<property name="husefileDao" ref="husefileDao"/>
+	</bean>
+	
+	<bean id="gitService" class="cn.husestudy.git.service.GitService">
+		<property name="gitDao" ref="gitDao"/>
+	</bean>
+	
+	<bean id="discussService" class="cn.husestudy.discuss.service.DiscussService">
+		<property name="discussDao" ref="discussDao"/>
+	</bean>
+	
+	<bean id="replyService" class="cn.husestudy.reply.service.ReplyService">
+		<property name="replyDao" ref="replyDao"/>
+	</bean>
+
+	<bean id="sendMsgService" class="cn.husestudy.sendmsg.service.SendMsgService">
+		<property name="sendMsgDao" ref="sendMsgDao"/>
+	</bean>
+	
+	<bean id="mottoService" class="cn.husestudy.motto.service.MottoService">
+		<property name="mottoDao" ref="mottoDao"/>
+	</bean>
+	
+	<!-- Dao的配置  ===============================================================-->
+	<!--  ====================================================================== -->
+	
+	<bean id="collegeDao" class="cn.husestudy.college.dao.CollegeDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>	
+	
+	<bean id="majorDao" class="cn.husestudy.major.dao.MajorDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="major_UserDao" class="cn.husestudy.major_user.dao.Major_UserDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="userDao" class="cn.husestudy.user.dao.UserDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="adminDao" class="cn.husestudy.admin.dao.AdminDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>	
+	
+	<bean id="worksDao" class="cn.husestudy.works.dao.WorksDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>	
+	
+	<bean id="husefileDao" class="cn.husestudy.husefile.dao.HusefileDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="gitDao" class="cn.husestudy.git.dao.GitDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="discussDao" class="cn.husestudy.discuss.dao.DiscussDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="replyDao" class="cn.husestudy.reply.dao.ReplyDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="sendMsgDao" class="cn.husestudy.sendmsg.dao.SendMsgDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<bean id="mottoDao" class="cn.husestudy.motto.dao.MottoDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+
+</beans>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping>
+	<class name="cn.husestudy.major.vo.Major" table="major">
+		<id name="mid">
+			<generator class="native"/>
+		</id>
+		<property name="mname"/>
+		
+		<!-- 二级分类(专业)与一级分类(学院)的关联 -->
+		<many-to-one name="college" lazy="false" class="cn.husestudy.college.vo.College" column="cid"></many-to-one>
+		
+		<!-- 二级分类(专业)与(多项专业)的关联 -->
+		<set order-by="muid" name="major_User" lazy="false" cascade="delete">
+			<key column="mid"/>
+			<one-to-many class="cn.husestudy.major_user.vo.Major_User"/>
+		</set>
+		
+		<!-- 二级分类(专业)与(用户)的关联 -->
+		<!-- <set order-by="uid" name="user" lazy="false" cascade="delete">
+			<key column="mid"/>
+			<one-to-many class="cn.husestudy.user.vo.User"/>
+		</set> -->
+		
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="cn.husestudy.git.vo.Git" table="git">
+		<id name="gid">
+			<generator class="native"/>
+		</id>
+		<property name="gdate"/>
+		
+		<!-- （收藏）与 （学生/老师）的关联配置-->
+		<many-to-one name="user" lazy="false" class="cn.husestudy.user.vo.User" column="uid"/>
+		
+		<!-- （收藏）与 （作品）的关联配置-->
+		<many-to-one name="works" lazy="false" class="cn.husestudy.works.vo.Works" column="wid"/>
+	</class>
+</hibernate-mapping>

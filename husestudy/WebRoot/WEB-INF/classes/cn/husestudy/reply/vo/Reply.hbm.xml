@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="cn.husestudy.reply.vo.Reply" table="reply">
+		<id name="reply_id" column="reply_id">
+			<generator class="uuid"/>
+		</id>
+		<property name="reply_content"/>
+		<property name="reply_time"/>
+		
+		<!-- 回复与（评论）关联配置 -->
+		<many-to-one name="discuss" lazy="false" class="cn.husestudy.discuss.vo.Discuss" column="did"/>
+		<!-- 回复与（用户）关联配置 :默认的配置就是save-update,persist-->
+		<many-to-one name="user" lazy="false" cascade="save-update,persist" class="cn.husestudy.user.vo.User" column="uid"/>
+		<!-- 回复与（作品）关联配置 -->
+		<many-to-one name="works" lazy="false" class="cn.husestudy.works.vo.Works" column="wid"/>
+		
+	</class>
+</hibernate-mapping>

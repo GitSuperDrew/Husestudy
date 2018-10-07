@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="cn.husestudy.discuss.vo.Discuss" table="discuss">
+		<id name="did">
+			<generator class="native"/>
+		</id>
+		
+		<property name="dcontent"/>
+		<property name="ddate"/>
+		<property name="good"/>
+		<property name="bad"/>
+		
+		<!-- n评论与（1用户）关联配置 -->
+		<many-to-one name="user" lazy="false" cascade="save-update,persist" class="cn.husestudy.user.vo.User" column="uid"/>
+	
+		<!-- n评论与（1作品）关联配置 -->
+		<many-to-one name="works" lazy="false" class="cn.husestudy.works.vo.Works" column="wid"/>
+		
+		<!-- 1评论与（n回复）关联配置 -->
+		<set name="reply" cascade="delete">
+			<key column="did"/>
+			<one-to-many class="cn.husestudy.reply.vo.Reply"/>
+		</set>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,117 @@
+body {
+	background-color: #9FBAF1;
+	background-image: url(../images/video2.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-attachment: fixed;
+}
+
+center{
+	color: red;
+	margin-top: 5%;
+}
+
+#login-form {
+	width: 50%;
+	height: 50%;
+}
+
+#login_table {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -150px;
+	margin-top: -150px;
+	background-color: #3961A7;
+	border-radius: 10px;
+}
+
+td {
+	width: 300px;
+	height: 80px;
+	text-align: center;
+}
+
+#welcome {
+	height: 60%;
+	color: white;
+	margin: 0;
+	padding: 3px;
+	background-color: darkblue;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+
+input[type='text'],
+input[type='password'] {
+	font-family: "幼圆";
+	font-size: 15px;
+	width: 70%;
+	height: 75%;
+	text-align: left;
+	color: white;
+	padding-left: 5%;
+	border-radius: 10px;
+	background-color: #202E48;
+	border: 0;
+}
+
+input[type='text']:hover,
+input[type='password']:hover {
+	background-color: #202E32;
+	font-family: "微软雅黑";
+}
+
+input[type='submit'] {
+	font-family: "幼圆";
+	font-size: 15px;
+	width: 45%;
+	height: 60%;
+	border-radius: 10px;
+	border: 0;
+	background-color: #9FBAF1;
+}
+
+input[type='submit']:hover {
+	background-color: #AFEEEE;
+	font-family: "微软雅黑";
+	font-size: 20px;
+}
+
+#password_forget {
+	height: 60%;
+	margin: 0;
+	padding: 3px;
+	background-color: darkblue;
+	-moz-border-radius-topleft: 10px;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+a {
+	color: steelblue;
+	font-family: "幼圆";
+	font-size: 12px;
+	text-decoration: underline;
+}
+
+a:hover {
+	color: paleturquoise;
+	text-decoration: none;
+}
+
+span {
+	color: #AFEEEE;
+	font-size: 10px;
+	padding-left: 13%;
+	float: left;
+	font-style: normal;
+}
+
+#span {
+	float: right;
+	padding-right: 14%;
+	font-size: 11px;
+	font-style: oblique;
+	font-family: "微软雅黑";
+}

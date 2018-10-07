@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="cn.husestudy.works.vo.Works" table="works">
+		<id name="wid">
+			<generator class="native"/>
+		</id>
+		<property name="wname"/>
+		<property name="wcontent"/>
+		<property name="wimage"/>
+		<property name="wvedio"/>
+		<property name="wdate"/>
+		
+		
+		<!-- （作品）与 （学生）的关联配置-->
+		<many-to-one name="user" lazy="false" class="cn.husestudy.user.vo.User" column="uid"/>
+		
+		<!-- （作品）与（评论）的关联配置 -->
+		<set name="discuss" cascade="delete">
+			<key column="wid"/>
+			<one-to-many class="cn.husestudy.discuss.vo.Discuss"/>
+		</set>
+		
+		<!-- （作品）与（评论）的关联配置 -->
+		<set name="git" cascade="delete">
+			<key column="wid"/>
+			<one-to-many class="cn.husestudy.git.vo.Git"/>
+		</set>
+		
+		<!-- （作品）与（回复）的关联配置 -->
+		<set name="reply" cascade="delete">
+			<key column="wid"/>
+			<one-to-many class="cn.husestudy.reply.vo.Reply"/>
+		</set>
+		
+		<sql-query name="countWorks">
+		<![CDATA[
+			select count(*) from Works
+		]]>
+		</sql-query>
+		<sql-query name="showAllWorks">
+			<return class="cn.husestudy.works.vo.Works"></return>
+			<![CDATA[
+				select * from Works
+			]]>
+		</sql-query>
+		
+	</class>
+</hibernate-mapping>

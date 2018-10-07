@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping>
+	<class name="cn.husestudy.motto.vo.Motto" table="motto">
+		<id name="motto_id">
+			<generator class="native"/>
+		</id>
+		<property name="motto_author"/>
+		<property name="motto_content"/>
+		<property name="motto_message"/>
+		<property name="motto_time"/>	
+		
+	</class>
+</hibernate-mapping>

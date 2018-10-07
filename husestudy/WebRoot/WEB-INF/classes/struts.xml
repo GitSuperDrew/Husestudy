@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<!-- <constant name="struts.enable.DynamicMethodInvocation" value="true" /> -->
+	<constant name="struts.devMode" value="false" />
+	<!-- 所允许上传文件的总大小 -->
+	<constant name="struts.multipart.maxSize" value="6000000000"/>
+	<!-- 上传过程中临时文件存放目录 -->
+	<constant name="struts.multipart.saveDir" value="/temp"/>
+	
+	
+	<package name="husestudy" extends="struts-default" namespace="/">
+		<!-- 配置自定义拦截器 -->
+		<interceptors>
+			<interceptor name="privilegeInterceptor" class="cn.husestudy.interceptor.PrivilegeInterceptor"/>
+		</interceptors>
+	
+		<global-results>
+			<result name="msg">/WEB-INF/jsp/msg.jsp</result>
+			<result name="login">/admin/admin_login1.jsp</result>
+		</global-results>			
+		
+		<!-- 配置（首页）访问的Action -->
+		<action name="index" class="indexAction">
+			<result name="index">/WEB-INF/jsp/index.jsp</result>
+		</action>
+		
+		<!-- 配置（用户学生/老师）模块的Action -->
+		<action name="user_*" class="userAction" method="{1}">
+			<result name="registPage">/WEB-INF/jsp/regist.jsp</result>
+			<result name="repasswordPage">/WEB-INF/jsp/repasswordPage.jsp</result>
+			<result name="input">/WEB-INF/jsp/regist.jsp</result>
+			<result name="loginPage">/WEB-INF/jsp/login.jsp</result>
+			<result name="login">/WEB-INF/jsp/login.jsp</result>
+			<result name="loginSuccess" type="redirectAction">index</result>
+			<result name="quit" type="redirectAction">index</result>
+			<result name="singleHome">/WEB-INF/jsp/SingleHome.jsp</result>
+			<result name="singleHomeOver">/WEB-INF/jsp/SingleHomeOver.jsp</result>
+			<result name="checkcodeFail">/WEB-INF/jsp/regist.jsp</result>
+			<result name="findAllWorkByUsername">/WEB-INF/jsp/Works/listWorks.jsp</result>
+			<result name="map">/WEB-INF/jsp/Home/Map.jsp</result>
+		</action>
+		
+		<!-- 配置（学院首页）的Action -->
+		<action name="college_*" class="collegeAction" method="{1}">
+			<result name="collegeHome">/WEB-INF/jsp/College/CollegeHome.jsp</result>
+			<result name="collegeLXY">/WEB-INF/jsp/College/CollegeLXY.jsp</result>
+			<result name="collegeMKS">/WEB-INF/jsp/College/CollegeMKS.jsp</result>
+			<result name="collegeJG">/WEB-INF/jsp/College/CollegeJG.jsp</result>
+			<result name="collegeRWJY">/WEB-INF/jsp/College/CollegeRWJY.jsp</result>
+			<result name="collegeTY">/WEB-INF/jsp/College/CollegeTY.jsp</result>
+			<result name="collegeWGY">/WEB-INF/jsp/College/CollegeWGY.jsp</result>
+			<result name="collegeCM">/WEB-INF/jsp/College/CollegeCM.jsp</result>
+			<result name="collegeDX">/WEB-INF/jsp/College/CollegeDX.jsp</result>
+			<result name="collegeTM">/WEB-INF/jsp/College/CollegeTM.jsp</result>
+			<result name="collegeHS">/WEB-INF/jsp/College/CollegeHS.jsp</result>
+			<result name="collegeYW">/WEB-INF/jsp/College/CollegeYW.jsp</result>
+			<result name="collegeMY">/WEB-INF/jsp/College/CollegeMY.jsp</result>
+		</action>
+		
+		<!-- 验证码Action -->
+		<action name="checkImg" class="checkImgAction"></action>
+		
+		<!-- 配置（作品）的action -->
+		<action name="works_*" class="worksAction" method="{1}">
+			<interceptor-ref name="fileUpload"> 
+				<!-- <param name="allowedTypes"> image/bmp,image/png,image/gif,image/jpeg,image/jpg</param> -->
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack"/>
+			<result name="findAll">/WEB-INF/jsp/Works/listWorks.jsp</result>
+			<result name="addPage">/WEB-INF/jsp/Works/addWorks.jsp</result>
+			<result name="editSuccess">/WEB-INF/jsp/Works/editWorks.jsp</result>
+			<result name="saveSuccess" type="redirectAction">works_findAllWorksByUsername.action?page=1</result>
+			<result name="deleteSuccess" type="redirectAction">works_findAllWorksByUsername.action?page=1</result>
+			<result name="updateSuccess" type="redirectAction">works_findAllWorksByUsername.action?page=1</result>
+			<result name="detialsSuccess">/WEB-INF/jsp/Works/detialsWorks.jsp</result>
+			<result name="findAllWorksByUsername">/WEB-INF/jsp/Works/listWorks.jsp</result>
+			<result name="findByUsername">/WEB-INF/jsp/Works/listWorks.jsp</result>
+			<result name="findAllWorksFromGitUid">/WEB-INF/jsp/Works/listWorks.jsp</result>
+			<result name="countWorks" type="redirectAction">works_findAllWorksByUsername.action?page=1</result>
+		</action>
+		
+		<!-- 配置（文件）的action -->
+		<action name="husefile_*" class="husefileAction" method="{1}">
+			<result name="addPage">/WEB-INF/jsp/DownloadCenter/addHusefile.jsp</result>
+			<result name="saveSuccess" type="redirectAction">husefile_fileListCenter.action?page=1</result>
+			<result name="updateSuccess" type="redirectAction">husefile_fileListCenter.action?page=1</result>
+			<result name="deleteSuccess" type="redirectAction">husefile_fileListCenter.action?page=1</result>
+			<result name="fileListCenter">/WEB-INF/jsp/DownloadCenter/listCenter.jsp</result>
+			<result name="download" type="stream">
+				<param name="inputName">inputStream</param><!-- 设置输入流的来源 -->
+				<param name="contentType">application/octet-stream</param><!-- 设置头，不让浏览器直接打开，二进制流 -->
+				<!-- contentDisposition 使用经过转码的文件名作为下载文件名 —— 默认格式是attachment;filename="${docName}"，将调用该Action中的getDocName方法。 -->
+				<param name="contentDisposition">attachment;filename=${docName}</param>
+				<param name="bufferSize">1024</param>
+			</result>
+		</action>
+		
+		<!-- 配置（评论）的action -->
+		<action name="discuss_*" class="discussAction" method="{1}">
+			<result name="findByUid">/WEB-INF/jsp/Discuss/userDiscuss.jsp</result>
+			<result name="editSuccess">/WEB-INF/jsp/Discuss/editDiscuss.jsp</result>
+			<result name="saveSuccess" type="redirectAction">discuss_findByUid.action?page=1</result>
+			<result name="deleteSuccess" type="redirectAction">discuss_findByUid.action?page=1</result>
+			<result name="updateSuccess" type="redirectAction">discuss_findByUid.action?page=1</result>
+			<result name="updateGoodByDidSuccess" type="redirectAction">discuss_findByUid.action?page=1</result>
+			<result name="updateBadByDidSuccess"  type="redirectAction">discuss_findByUid.action?page=1</result>
+			<result name="sendMessageSuccess">/WEB-INF/jsp/Discuss/addDiscuss.jsp</result>
+		</action>
+		
+		<!-- 配置（回复）的action -->
+		<!-- <action name="reply_*" class="replyAction" method="{1}">
+		</action> -->
+		
+		<!-- 配置（收藏）的action -->
+		<action name="git_*" class="gitAction" method="{1}">
+			<result name="findByUid">/WEB-INF/jsp/Git/listGit.jsp</result>
+			<result name="deleteSuccess" type="redirectAction">git_findByUid.action?page=1</result>
+		</action>
+		
+		<!-- 配置(网站服务信息)的Action -->
+		<action name="contact_Info_*" class="contact_InfoAction" method="{1}">
+			<result name="findAllContactInfo">/WEB-INF/jsp/Home/HomeFooter.jsp</result>
+		</action>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<!-- 后台(名言格言)管理的Action -->
+		<action name="mottoAdmin_*" class="mottoAdminAction" method="{1}">
+			<result name="findAll">/admin/motto/list.jsp</result>
+			<result name="addPageSuccess">/admin/motto/add.jsp</result>
+			<result name="editSuccess">/admin/motto/edit.jsp</result>
+			<result name="saveSuccess" type="redirectAction">mottoAdmin_findAll.action?page=1</result>
+			<result name="updateSuccess" type="redirectAction">mottoAdmin_findAll.action?page=1</result>
+			<result name="deleteSuccess" type="redirectAction">mottoAdmin_findAll.action?page=1</result>
+			<interceptor-ref name="privilegeInterceptor"/>
+			<interceptor-ref name="defaultStack"/>
+		</action>
+		
+		<!-- 后台（网站信息服务）管理的Action -->
+		<action name="contact_InfoAdmin_*" class="contact_InfoAdminAction" method="{1}">
+			<result name="contactInfo">/admin/contactInfo/list.jsp</result>
+			<result name="editContactInfoSuccess">/admin/contactInfo/edit.jsp</result>
+			<result name="saveContactInfoSuccess" type="redirectAction">contact_InfoAdmin_contactInfo.action?page=1</result>
+			<result name="updateContactInfoSuccess" type="redirectAction">contact_InfoAdmin_contactInfo.action?page=1</result>
+			<interceptor-ref name="privilegeInterceptor"/>
+			<interceptor-ref name="defaultStack"/>	
+		</action>
+		
+		<!-- 后台（评论Discuss）管理的Action -->
+		<action name="discussAdmin_*" class="discussAdminAction" method="{1}">
+			<result name="findAll">/admin/discuss/list.jsp</result>
+			<result name="deleteSuccess" type="redirectAction">discussAdmin_findAll.action?page=1</result>
+			<result name="updateSuccess" type="redirectAction">discussAdmin_findAll.action?page=1</result>
+			<interceptor-ref name="privilegeInterceptor"/>
+			<interceptor-ref name="defaultStack"/>
+		</action>
+		
+		
+		<!-- 后台（作品Works）管理的Action -->
+		<action name="adminWorks_*" class="adminWorksAction" method="{1}">
+			<result name="findAll">/admin/works/list.jsp</result>
+			<result name="deleteSuccess" type="redirectAction">adminWorks_findAll.action?page=1</result>
+			<result name="updateSuccess" type="redirectAction">adminWorks_findAll.action?page=1</result>
+			<interceptor-ref name="privilegeInterceptor"/>
+			<interceptor-ref name="defaultStack"/>
+		</action>
+		
+				
+		<!-- 后台（管理员）登录Action -->
+		<action name="admin_*" class="adminAction" method="{1}">
+			<result name="loginFail">/admin/admin_login1.jsp</result>
+			<result name="loginSuccess" type="redirect">/admin/home.jsp</result>
+			<interceptor-ref name="privilegeInterceptor">
+				<param name="excludeMethods">login</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack"/>
+		</action>
+		<!-- 后台管理员登录2Action -->
+		<action name="adminPlus_*" class="adminPlusAction" method="{1}">
+			<result name="loginFail">/adminPlus/Public/login.jsp</result>
+			<result name="loginSuccess" type="redirect">/adminPlus/index.jsp</result>
+			<interceptor-ref name="privilegeInterceptor">
+				<param name="excludeMethods">login</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack"/>
+		</action>		
+		
+		<!-- 后台（学院）一级分类管理Action -->
+		<action name="adminCollege_*" class="adminCollegeAction" method="{1}">
+			<result name="findAll">/admin/college/list.jsp</result>
+			<result name="saveSuccess" type="redirectAction">adminCollege_findAll</result>
+			<result name="deleteSuccess" type="redirectAction">adminCollege_findAll</result>
+			<result name="editSuccess">/admin/college/edit.jsp</result>
+			<result name="updateSuccess" type="redirectAction">adminCollege_findAll</result>		
+			<interceptor-ref name="privilegeInterceptor"/>
+			<interceptor-ref name="defaultStack"/>
+		</action>
+		<action name="adminCollegePlus_*" class="adminCollegePlusAction" method="{1}">
+			<result name="findAllByPage">/adminPlus/College/list.jsp</result>
+			<result name="saveSuccess" type="redirectAction">adminCollegePlus_findAllByPage?page=1</result>
+			<result name="deleteSuccess" type="redirectAction">adminCollegePlus_findAllByPage?page=1</result>
+			<result name="editSuccess">/adminPlus/College/edit.jsp</result>
+			<result name="updateSuccess" type="redirectAction">adminCollegePlus_findAllByPage?page=1</result>		
+			<interceptor-ref name="privilegeInterceptor"/>
+			<interceptor-ref name="defaultStack"/>
+		</action>		
+				
+		<!-- 后台（专业）二级分类管理Action -->
+		<action name="adminMajor_*" class="adminMajorAction" method="{1}">
+			<result name="findAll">/admin/major/list.jsp</result>
+			<result name="addPage">/admin/major/add.jsp</result>
+			<result name="editSuccess">/admin/major/edit.jsp</result>
+			<result name="saveSuccess" type="redirectAction">adminMajor_findAll?page=1</result>
+			<result name="deleteSuccess" type="redirectAction">adminMajor_findAll?page=1</result>
+			<result name="updateSuccess" type="redirectAction">adminMajor_findAll?page=1</result>
+			<interceptor-ref name="privilegeInterceptor"/>
+			<interceptor-ref name="defaultStack"/>
+		</action>		
+		
+		<!-- 后台（多项专业）管理Action -->
+		<action name="major_UserAdmin_*" class="major_UserAdminAction" method="{1}">
+			<result name="findAll">/admin/major_user/list.jsp</result>
+			<result name="addPage">/admin/major_user/add.jsp</result>
+			<result name="saveSuccess" type="redirectAction">major_UserAdmin_findAll?page=1</result>
+			<result name="deleteSuccess" type="redirectAction">major_UserAdmin_findAll?page=1</result>
+			<result name="editSuccess">/admin/major_user/edit.jsp</result>
+			<result name="updateSuccess" type="redirectAction">major_UserAdmin_findAll?page=1</result>
+			<interceptor-ref name="privilegeInterceptor"/>
+			<interceptor-ref name="defaultStack"/>
+		</action>
+		
+		
+		<!-- 后台用户（学生/老师）管理的Action -->
+		<action name="userAdmin_*" class="userAdminAction" method="{1}">
+			<result name="findAll">/admin/user/list.jsp</result>
+			<result name="addPageSuccess">/admin/user/add.jsp</result>
+			<result name="editSuccess">/admin/user/edit.jsp</result>			
+			<result name="saveSuccess" type="redirectAction">userAdmin_findAll.action?page=1</result>
+			<result name="deleteSuccess" type="redirectAction">userAdmin_findAll.action?page=1</result>
+			<result name="updateSuccess" type="redirectAction">userAdmin_findAll.action?page=1</result>
+			<interceptor-ref name="privilegeInterceptor"/>
+			<interceptor-ref name="defaultStack"/>
+		</action>
+<!--这是一个问题  -->
+		<action name="userAdminPlus_*" class="userAdminPlusAction" method="{1}">
+			<result name="findAllByPage">/adminPlus/User/index.jsp</result>
+			<result name="addPageSuccess">/adminPlus/User/add.jsp</result>
+			<result name="editSuccess">/adminPlus/User/edit.jsp</result>			
+			<result name="saveSuccess" type="redirectAction">userAdminPlus_findAllByPage.action?page=1</result>
+			<result name="deleteSuccess" type="redirectAction">userAdminPlus_findAllByPage.action?page=1</result>
+			<result name="updateSuccess" type="redirectAction">userAdminPlus_findAllByPage.action?page=1</result>
+			<interceptor-ref name="privilegeInterceptor"/>
+			<interceptor-ref name="defaultStack"/>
+		</action>
+		
+		
+		<!-- 后台（收藏Git）管理的Action -->
+		<action name="adminGit_*" class="adminGitAction" method="{1}">
+			<result name="findAll">/admin/git/list.jsp</result>
+			<result name="deleteSuccess" type="redirectAction">adminGit_findAll.action?page=1</result>
+			<result name="updateSuccess" type="redirectAction">adminGit_findAll.action?page=1</result>
+			<interceptor-ref name="privilegeInterceptor"/>
+			<interceptor-ref name="defaultStack"/>
+		</action>
+		
+		<!-- 后台（用户反馈信息）管理的Action -->
+		<action name="sendMsgAdmin_*" class="sendMsgAdminAction" method="{1}">
+			<result name="findAll">/admin/sendmsg/list.jsp</result>
+			<result name="saveSuccess" type="redirectAction">sendMsgAdmin_findAll.action?page=1</result>
+			<result name="deleteSuccess" type="redirectAction">sendMsgAdmin_findAll.action?page=1</result>
+			<interceptor-ref name="privilegeInterceptor"/>
+			<interceptor-ref name="defaultStack"/>
+		</action>
+		
+		<!-- 前台（用户反馈信息）管理的action -->
+		<action name="sendMsg_*" class="sendMsgAction" method="{1}">
+			<result name="sendMsgSuccess">/WEB-INF/jsp/Home/HomeFooter.jsp</result>
+		</action>
+	</package>
+</struts>

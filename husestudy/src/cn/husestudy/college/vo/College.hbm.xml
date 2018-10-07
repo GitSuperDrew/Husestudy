@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    
+<hibernate-mapping>
+	<class name="cn.husestudy.college.vo.College" table="college">
+		<id name="cid">
+			<generator class="native"/>
+		</id>
+		<property name="cname"/>
+		
+		<!-- 配置二级分类(专业)的集合 -->
+		<set order-by="mid" name="major" lazy="false" cascade="delete">
+			<key column="cid"/>
+			<one-to-many class="cn.husestudy.major.vo.Major"/>
+		</set>
+	</class>
+</hibernate-mapping>
